@@ -18,13 +18,16 @@ package org.scalatrain
 object Time {
 
   def fromMinutes(minutes: Int): Time = {
-    // TODO Check preconditions!
+    require(minutes >= 0, "minutes must not be negative!")
     new Time(minutes / 60, minutes % 60)
   }
 }
 
 case class Time(hours: Int = 0, minutes: Int = 0) {
-  // TODO Check preconditions!
+  require(hours >= 0, "hours must not be negative!")
+  require(hours < 24, "hours must be less than 24!")
+  require(minutes >= 0, "minutes must not be negative!")
+  require(minutes < 60, "minutes must be less than 60!")
 
   lazy val asMinutes: Int =
     minutes + 60 * hours
@@ -33,7 +36,7 @@ case class Time(hours: Int = 0, minutes: Int = 0) {
     minus(that)
 
   def minus(that: Time): Int = {
-    // TODO Check preconditions!
+    require(that != null, "that must not be null!")
     this.asMinutes - that.asMinutes
   }
 }
