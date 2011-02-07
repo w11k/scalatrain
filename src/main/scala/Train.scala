@@ -15,7 +15,18 @@
  */
 package org.scalatrain
 
-case class Train(kind: String, number: String) {
+import scala.collection.immutable.Seq
+
+case class Train(kind: String, number: String, schedule: Seq[(Time, Station)]) {
   require(kind != null, "kind must not be null!")
   require(number != null, "number must not be null!")
+  require(schedule != null, "schedule must not be null!")
+  require(schedule.size >= 2, "schedule must have at least two stops!")
+
+  val stations: Seq[Station] =
+    schedule map { _._2 }
+}
+
+case class Station(name: String) {
+  require(name != null, "name must not be null!")
 }
