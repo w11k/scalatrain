@@ -66,6 +66,26 @@ class JourneyPlannerSpec extends Specification {
     }
   }
 
+  "Calling isShortTrip" should {
+    val journeyPlanner = new JourneyPlanner(Set(train1, train2))
+
+    "throw an IllegalArgumentException for a null from" in {
+      journeyPlanner.isShortTrip(null, stationA) must throwA[IllegalArgumentException]
+    }
+
+    "throw an IllegalArgumentException for a null to" in {
+      journeyPlanner.isShortTrip(stationD, null) must throwA[IllegalArgumentException]
+    }
+
+    "return the correct result" in {
+      journeyPlanner.isShortTrip(stationA, stationB) mustEqual true
+      journeyPlanner.isShortTrip(stationA, stationC) mustEqual true
+      journeyPlanner.isShortTrip(stationC, stationA) mustEqual false
+      journeyPlanner.isShortTrip(Station("X"), stationA) mustEqual false
+      journeyPlanner.isShortTrip(stationA, Station("X")) mustEqual false
+    }
+  }
+
   private lazy val train1 = new Train(Ice("720"), schedule1)
 
   private lazy val train2 = new Train(Ice("722"), schedule2)

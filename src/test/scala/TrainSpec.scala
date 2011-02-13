@@ -42,6 +42,17 @@ class TrainSpec extends Specification {
       train.stations mustEqual List(Station("0"), Station("1"))
     }
   }
+
+  "Calling toString" should {
+
+    "return the correct result" in {
+      val schedule = List(Time(0, 0) -> Station("0"), Time(1, 1) -> Station("1"))
+      Train(Ice("123", true), schedule).toString mustEqual "ICE 123 (WIFI)"
+      Train(Ice("123"), schedule).toString mustEqual "ICE 123"
+      Train(Re("123"), schedule).toString mustEqual "RE 123"
+      Train(Brb("123"), schedule).toString mustEqual "BRB 123"
+    }
+  }
 }
 
 class StationSpec extends Specification {

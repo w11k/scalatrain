@@ -24,6 +24,14 @@ case class Train(info: TrainInfo, schedule: Seq[(Time, Station)]) {
 
   val stations: Seq[Station] =
     schedule map { _._2 }
+
+  override def toString =
+    info match {
+      case Ice(number, true) => "ICE %s (WIFI)" format number
+      case Ice(number, _) => "ICE %s" format number
+      case Re(number) => "RE %s" format number
+      case Brb(number) => "BRB %s" format number
+    }
 }
 
 case class Station(name: String) {

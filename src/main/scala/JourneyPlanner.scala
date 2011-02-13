@@ -16,6 +16,7 @@
 package org.scalatrain
 
 import util.Logging
+import scala.collection.immutable.Seq
 
 class JourneyPlanner(trains: Set[Train]) extends Logging {
   require(trains != null, "trains must not be null!")
@@ -40,7 +41,19 @@ class JourneyPlanner(trains: Set[Train]) extends Logging {
 //    }
     for {
       train <- trains
-      timeAndStation <- train.schedule if (timeAndStation._2 == station)
-    } yield timeAndStation._1 -> train
+      (time, station2) <- train.schedule if (station2 == station)
+    } yield time -> train
+  }
+
+  def isShortTrip(from: Station, to: Station): Boolean = {
+    require(from != null, "from must not be null!")
+    require(to != null, "to must not be null!")
+    trains exists {
+      _.stations dropWhile { from != } match {
+        case Seq(`from`, _, `to`, _*) => true
+        case Seq(`from`, `to`, _*) => true
+        case _ => false
+      }
+    }
   }
 }
