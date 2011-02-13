@@ -66,9 +66,9 @@ class JourneyPlannerSpec extends Specification {
     }
   }
 
-  private lazy val train1 = new Train("k1", "n1", schedule1)
+  private lazy val train1 = new Train(Ice("720"), schedule1)
 
-  private lazy val train2 = new Train("k2", "n2", schedule2)
+  private lazy val train2 = new Train(Ice("722"), schedule2)
 
   private lazy val schedule1 =
     List(

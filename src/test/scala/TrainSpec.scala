@@ -21,28 +21,24 @@ class TrainSpec extends Specification {
 
   "Creating a Train" should {
 
-    "throw an IllegalArgumentException for a null kind" in {
-      Train(null, "number", Nil) must throwA[IllegalArgumentException]
-    }
-
-    "throw an IllegalArgumentException for a null number" in {
-      Train("kind", null, Nil) must throwA[IllegalArgumentException]
+    "throw an IllegalArgumentException for a null info" in {
+      Train(null, Nil) must throwA[IllegalArgumentException]
     }
 
     "throw an IllegalArgumentException for a null schedule" in {
-      Train("kind", "number", null) must throwA[IllegalArgumentException]
+      Train(Ice("720"), null) must throwA[IllegalArgumentException]
     }
 
     "throw an IllegalArgumentException for a schedule with less than two stops" in {
-      Train("kind", "number", Nil) must throwA[IllegalArgumentException]
-      Train("kind", "number", List(Time(0, 0) -> Station("station-0"))) must throwA[IllegalArgumentException]
+      Train(Ice("720"), Nil) must throwA[IllegalArgumentException]
+      Train(Ice("720"), List(Time(0, 0) -> Station("station-0"))) must throwA[IllegalArgumentException]
     }
   }
 
   "Getting stations" should {
 
     "return the correct stations in correct sequence" in {
-      val train = Train("kind", "number", List(Time(0, 0) -> Station("0"), Time(1, 1) -> Station("1")))
+      val train = Train(Ice("720"), List(Time(0, 0) -> Station("0"), Time(1, 1) -> Station("1")))
       train.stations mustEqual List(Station("0"), Station("1"))
     }
   }

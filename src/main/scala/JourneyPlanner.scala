@@ -15,8 +15,11 @@
  */
 package org.scalatrain
 
-class JourneyPlanner(trains: Set[Train]) {
+import util.Logging
+
+class JourneyPlanner(trains: Set[Train]) extends Logging {
   require(trains != null, "trains must not be null!")
+  logger.debug("Initialized with the following %s trains:\n%s".format(trains.size, trains))
 
   val stations: Set[Station] =
     trains flatMap { _.stations }

@@ -17,9 +17,8 @@ package org.scalatrain
 
 import scala.collection.immutable.Seq
 
-case class Train(kind: String, number: String, schedule: Seq[(Time, Station)]) {
-  require(kind != null, "kind must not be null!")
-  require(number != null, "number must not be null!")
+case class Train(info: TrainInfo, schedule: Seq[(Time, Station)]) {
+  require(info != null, "info must not be null!")
   require(schedule != null, "schedule must not be null!")
   require(schedule.size >= 2, "schedule must have at least two stops!")
 
@@ -30,3 +29,14 @@ case class Train(kind: String, number: String, schedule: Seq[(Time, Station)]) {
 case class Station(name: String) {
   require(name != null, "name must not be null!")
 }
+
+sealed abstract class TrainInfo {
+
+  def number: String
+}
+
+case class Ice(number: String, hasWifi: Boolean = false) extends TrainInfo
+
+case class Re(number: String) extends TrainInfo
+
+case class Brb(number: String) extends TrainInfo

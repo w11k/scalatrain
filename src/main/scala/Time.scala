@@ -23,7 +23,7 @@ object Time {
   }
 }
 
-case class Time(hours: Int = 0, minutes: Int = 0) {
+case class Time(hours: Int = 0, minutes: Int = 0) extends Ordered[Time] {
   require(hours >= 0, "hours must not be negative!")
   require(hours < 24, "hours must be less than 24!")
   require(minutes >= 0, "minutes must not be negative!")
@@ -39,4 +39,10 @@ case class Time(hours: Int = 0, minutes: Int = 0) {
     require(that != null, "that must not be null!")
     this.asMinutes - that.asMinutes
   }
+
+  override val toString: String =
+    "%02d:%02d".format(hours, minutes)
+
+  override def compare(that: Time): Int =
+    this - that
 }

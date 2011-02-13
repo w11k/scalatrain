@@ -96,4 +96,24 @@ class TimeSpec extends Specification with ScalaCheck {
       Time(1, 10).asMinutes mustEqual 70
     }
   }
+
+  "Calling toString" should {
+
+    "return a string formatted like hh:mm" in {
+      Time().toString mustEqual "00:00"
+      Time(1, 1).toString mustEqual "01:01"
+      Time(20, 20).toString mustEqual "20:20"
+    }
+  }
+
+  "Comparing Time instances" should {
+
+    "throw an IllegalArgumentException for a null that" in {
+      Time() compare null must throwA[IllegalArgumentException]
+    }
+
+    "return expected results when calling the likes of < and >" in {
+      Time(0) < Time(1) mustBe true
+    }
+  }
 }
