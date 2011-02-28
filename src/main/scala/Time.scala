@@ -15,19 +15,42 @@
  */
 package org.scalatrain
 
+import util.{ XmlFormat, XmlSerializable }
 import scala.xml.NodeSeq
 
-object Time {
+object Time extends XmlSerializable[Time] {
+
+  implicit object TimeXmlFormat extends XmlFormat[Time] {
+
+    override def fromXml(xml: NodeSeq): Time = {
+      require(xml != null, "xml must not be null!")
+      "%s:%s".format(xml \ "@hours", xml \ "@minutes")
+    }
+
+    override def toXml(time: Time): NodeSeq = {
+      require(time != null, "time must not be null!")
+      <time hours={ "%02d" format time.hours } minutes={ "%02d" format time.minutes } />
+    }
+  }
+
+  implicit def stringToTime(s: String): Time = {
+    require(s != null, "time must not be null!")
+    try {
+      val timePattern(hours, minutes) = s
+      Time(hours.toInt, minutes.toInt)
+    }
+    catch {
+      case e: MatchError =>
+        throw new IllegalArgumentException("Cannot convert String %s to Time!" format s, e)
+    }
+  }
 
   def fromMinutes(minutes: Int): Time = {
     require(minutes >= 0, "minutes must not be negative!")
     new Time(minutes / 60, minutes % 60)
   }
 
-  def fromXml(xml: NodeSeq): Time = {
-    require(xml != null, "xml must not be null!")
-    Time((xml \ "@hours").text.toInt, (xml \ "@minutes").text.toInt)
-  }
+  private val timePattern = """(\d{2})\:(\d{2})""".r
 }
 
 case class Time(hours: Int = 0, minutes: Int = 0) extends Ordered[Time] {
@@ -46,9 +69,6 @@ case class Time(hours: Int = 0, minutes: Int = 0) extends Ordered[Time] {
     require(that != null, "that must not be null!")
     this.asMinutes - that.asMinutes
   }
-
-  def toXml: NodeSeq =
-    <time hours={ "%02d" format hours } minutes={ "%02d" format minutes } />
 
   override val toString: String =
     "%02d:%02d".format(hours, minutes)

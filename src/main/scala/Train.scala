@@ -34,6 +34,12 @@ case class Train(info: TrainInfo, schedule: Seq[(Time, Station)]) {
     }
 }
 
+object Station {
+
+  implicit def stringToStation(s: String): Station =
+    Station(s)
+}
+
 case class Station(name: String) {
   require(name != null, "name must not be null!")
 }

@@ -57,6 +57,17 @@ class TrainSpec extends Specification {
 
 class StationSpec extends Specification {
 
+  // Testing the singleton object
+
+  "A String" should {
+
+    "be implicitly converted into a Station" in {
+      def id(station: Station) = station
+      id("test") mustEqual Station("test")
+    }
+  }
+
+  // Testing the class
   "Creating a Station" should {
 
     "throw an IllegalArgumentException for a null name" in {

@@ -23,6 +23,64 @@ class TimeSpec extends Specification with ScalaCheck {
 
   // Testing the singleton object
 
+  "Calling TimeXmlFormat.fromXml" should {
+    import Time.TimeXmlFormat
+
+    "throw an IllegalArgumentException for a null xml" in {
+      TimeXmlFormat fromXml null must throwA[IllegalArgumentException]
+    }
+
+    "return the correct result" in {
+      TimeXmlFormat fromXml <time hours="01" minutes="02" /> mustEqual Time(1, 2)
+    }
+  }
+
+  "Calling TimeXmlFormat.toXml" should {
+    import Time.TimeXmlFormat
+
+    "throw an IllegalArgumentException for a null time" in {
+      TimeXmlFormat toXml null must throwA[IllegalArgumentException]
+    }
+
+    "return the correct result" in {
+      TimeXmlFormat toXml Time(1, 2) mustEqual <time hours="01" minutes="02" />
+    }
+  }
+
+  "Using the XmlSerializable features of Time and TimeXmlFormat" should {
+    "lead to the correct results" in {
+      Time fromXml Time(12, 34).toXml mustEqual Time(12, 34)
+      val time: Time = Time(12, 34).toXml
+      time mustEqual Time(12, 34)
+    }
+  }
+
+  "Calling stringToTime" should {
+
+    "throw an IllegalArgumentException for a null String" in {
+      Time stringToTime null must throwA[IllegalArgumentException]
+    }
+
+    "throw an IllegalArgumentException for a String not matching the time pattern" in {
+      Time stringToTime "abc" must throwA[IllegalArgumentException]
+      Time stringToTime "25:00" must throwA[IllegalArgumentException]
+    }
+
+    "return the correct results" in {
+      Time stringToTime "00:00" mustEqual Time()
+      Time stringToTime "00:01" mustEqual Time(minutes = 1)
+      Time stringToTime "22:22" mustEqual Time(22, 22)
+    }
+  }
+
+  "A String" should {
+
+    "be implicitly converted into a Time" in {
+      import Time._
+      "10:30" - "08:00" mustEqual 150
+    }
+  }
+
   "Calling fromMinutes" should {
 
     "throw an IllegalArgumentException for negative minutes" in {
