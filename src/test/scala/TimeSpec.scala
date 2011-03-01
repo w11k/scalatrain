@@ -40,6 +40,17 @@ class TimeSpec extends Specification with ScalaCheck {
     }
   }
 
+  "Calling fromXml" should {
+
+    "throw an IllegalArgumentException for a null xml" in {
+      Time fromXml null must throwA[IllegalArgumentException]
+    }
+
+    "return a correctly initialized Time instance for a valid xml" in {
+      Time fromXml <time hours="01" minutes="02" /> mustEqual Time(1, 2)
+    }
+  }
+
   // Testing the class
 
   "Creating a Time" should {
@@ -94,6 +105,17 @@ class TimeSpec extends Specification with ScalaCheck {
     "return the correct value" in {
       Time(0, 10).asMinutes mustEqual 10
       Time(1, 10).asMinutes mustEqual 70
+    }
+  }
+
+  "Calling toXml" should {
+
+    "return a correct XML representation" in {
+      Time(1, 2).toXml mustEqual <time hours="01" minutes="02" />
+    }
+
+    "compose to identy with Time.fromXml" in {
+      Time fromXml Time(1, 2).toXml mustEqual Time(1, 2)
     }
   }
 

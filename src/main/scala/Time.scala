@@ -15,11 +15,18 @@
  */
 package org.scalatrain
 
+import scala.xml.NodeSeq
+
 object Time {
 
   def fromMinutes(minutes: Int): Time = {
     require(minutes >= 0, "minutes must not be negative!")
     new Time(minutes / 60, minutes % 60)
+  }
+
+  def fromXml(xml: NodeSeq): Time = {
+    require(xml != null, "xml must not be null!")
+    Time((xml \ "@hours").text.toInt, (xml \ "@minutes").text.toInt)
   }
 }
 
@@ -39,6 +46,9 @@ case class Time(hours: Int = 0, minutes: Int = 0) extends Ordered[Time] {
     require(that != null, "that must not be null!")
     this.asMinutes - that.asMinutes
   }
+
+  def toXml: NodeSeq =
+    <time hours={ "%02d" format hours } minutes={ "%02d" format minutes } />
 
   override val toString: String =
     "%02d:%02d".format(hours, minutes)
