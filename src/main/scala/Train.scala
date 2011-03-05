@@ -15,12 +15,15 @@
  */
 package org.scalatrain
 
+import util.{ hasNoDuplicates, isIncreasing }
 import scala.collection.immutable.Seq
 
 case class Train(info: TrainInfo, schedule: Seq[(Time, Station)]) {
   require(info != null, "info must not be null!")
   require(schedule != null, "schedule must not be null!")
   require(schedule.size >= 2, "schedule must have at least two stops!")
+  require(isIncreasing(schedule map { _._1 }), "schedule must contain monotonically increasing times!")
+  require(hasNoDuplicates(schedule map { _._2 }), "schedule must not contain duplicate stations!")
 
   val stations: Seq[Station] =
     schedule map { _._2 }
@@ -32,6 +35,14 @@ case class Train(info: TrainInfo, schedule: Seq[(Time, Station)]) {
       case Re(number) => "RE %s" format number
       case Brb(number) => "BRB %s" format number
     }
+
+  private[scalatrain] val consecutiveStations: Seq[(Station, Station)] =
+    stations.init zip stations.tail map {
+      case (from, to) => from -> to
+    }
+
+  private[scalatrain] val departureTimeFrom: Map[Station, Time] =
+    schedule map { _.swap } toMap
 }
 
 object Station {
@@ -54,3 +65,17 @@ case class Ice(number: String, hasWifi: Boolean = false) extends TrainInfo
 case class Re(number: String) extends TrainInfo
 
 case class Brb(number: String) extends TrainInfo
+
+case class Hop(from: Station, to: Station, train: Train) {
+  require(from != null, "from must not be null!")
+  require(to != null, "to must not be null!")
+  require(from != to, "from and to must not be equal!")
+  require(train != null, "train must not be null!")
+  require(train.consecutiveStations contains from -> to, "train must contain hop from -> to!")
+
+  def departureTime: Time =
+    train.departureTimeFrom(from)
+
+  def arrivalTime: Time =
+    train.departureTimeFrom(to)
+}

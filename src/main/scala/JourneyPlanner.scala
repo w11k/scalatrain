@@ -56,4 +56,39 @@ class JourneyPlanner(trains: Set[Train]) extends Logging {
       }
     }
   }
+
+  def connections(from: Station, to: Station, departureTime: Time): Set[Seq[Hop]] = {
+    require(from != null, "from must not be null!")
+    require(to != null, "to must not be null!")
+    require(from != to, "from and to must be different!")
+    require(departureTime != null, "departureTime must not be null!")
+
+    def connections(soFar: Seq[Hop], to: Station): Set[Seq[Hop]] = {
+      val currentStation = soFar.last.to
+      if (currentStation == to)
+        Set(soFar)
+      else {
+        val soFarStations = soFar.head.from +: (soFar map { _.to })
+        val nextHops =
+          hopsFrom(currentStation) filter { hop =>
+            !(soFarStations contains hop.to) && (hop.departureTime >= soFar.last.arrivalTime)
+          }
+        nextHops flatMap { hop => connections(soFar :+ hop, to) }
+      }
+    }
+
+    hopsFrom.getOrElse(from, Set.empty) filter {
+      _.departureTime >= departureTime
+    } flatMap {
+      hop => connections(Vector(hop), to)
+    }
+  }
+
+  private val hopsFrom = {
+    val hops = for {
+      train <- trains
+      (from, to) <- train.consecutiveStations
+    } yield Hop(from, to, train)
+    hops groupBy { _.from }
+  }
 }

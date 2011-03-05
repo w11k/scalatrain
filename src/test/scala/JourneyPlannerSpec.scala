@@ -86,6 +86,72 @@ class JourneyPlannerSpec extends Specification {
     }
   }
 
+  "Calling connections" should {
+    val journeyPlanner = new JourneyPlanner(Set(train1, train2))
+
+    "throw an IllegalArgumentException for a null from" in {
+      journeyPlanner.connections(null, stationB, Time(0)) must throwA[IllegalArgumentException]
+    }
+
+    "throw an IllegalArgumentException for a null to" in {
+      journeyPlanner.connections(stationA, null, Time(0)) must throwA[IllegalArgumentException]
+    }
+
+    "throw an IllegalArgumentException for identical from and to" in {
+      journeyPlanner.connections(stationA, stationA, Time(0)) must throwA[IllegalArgumentException]
+    }
+
+    "throw an IllegalArgumentException for a null departureTime" in {
+      journeyPlanner.connections(stationA, stationB, null) must throwA[IllegalArgumentException]
+    }
+
+    "return no connections for a unknown from or to" in {
+      journeyPlanner.connections(Station("C"), stationB, Time(10)) must beEmpty
+      journeyPlanner.connections(stationA, Station("C"), Time(10)) must beEmpty
+    }
+
+    "return no connections for a too early departureTime" in {
+      journeyPlanner.connections(stationA, stationB, Time(10)) must beEmpty
+    }
+
+    "return one connections for the trivial setup" in {
+      journeyPlanner.connections(stationA, stationC, Time()) mustEqual Set(Seq(Hop(stationA, stationB, train1), Hop(stationB, stationC, train1)))
+    }
+
+    "return four connections for the book setup at 12:00" in {
+      val ice11 = Train(Ice("11"), List(Time(10) -> stationA, Time(11) -> stationB, Time(12) -> stationD))
+      val ice12 = Train(Ice("12"), List(Time(13) -> stationD, Time(14) -> stationB, Time(15) -> stationA))
+      val ice13 = Train(Ice("13"), List(Time(16) -> stationA, Time(17) -> stationB, Time(18) -> stationD))
+      val ice14 = Train(Ice("14"), List(Time(19) -> stationD, Time(20) -> stationB, Time(21) -> stationA))
+      val ice21 = Train(Ice("21"), List(Time(12) -> stationA, Time(13) -> stationC, Time(14) -> stationD))
+      val ice22 = Train(Ice("22"), List(Time(15) -> stationD, Time(16) -> stationC, Time(17) -> stationA))
+      val ice23 = Train(Ice("23"), List(Time(18) -> stationA, Time(19) -> stationC, Time(20) -> stationD))
+      val ice24 = Train(Ice("24"), List(Time(21) -> stationD, Time(22) -> stationC, Time(23) -> stationA))
+      val re1 = Train(Re("1"), List(Time(11, 30) -> stationB, Time(12, 30) -> stationC))
+      val re2 = Train(Re("2"), List(Time(15, 30) -> stationC, Time(16, 30) -> stationB))
+      val journeyPlanner =
+        new JourneyPlanner(Set(ice11, ice12, ice13, ice14, ice21, ice22, ice23, ice24, re1, re2))
+      val connections = journeyPlanner.connections(stationA, stationD, "12:00")
+      connections must haveSize(5)
+      connections mustContain List(
+          Hop(stationA, stationB, ice13),
+          Hop(stationB, stationD, ice13))
+      connections mustContain List(
+          Hop(stationA, stationC, ice21),
+          Hop(stationC, stationD, ice21))
+      connections mustContain List(
+          Hop(stationA, stationC, ice23),
+          Hop(stationC, stationD, ice23))
+      connections mustContain List(
+          Hop(stationA, stationC, ice21),
+          Hop(stationC, stationD, ice23))
+      connections mustContain List(
+          Hop(stationA, stationC, ice21),
+          Hop(stationC, stationB, re2),
+          Hop(stationB, stationD, ice13))
+    }
+  }
+
   private lazy val train1 = new Train(Ice("720"), schedule1)
 
   private lazy val train2 = new Train(Ice("722"), schedule2)
