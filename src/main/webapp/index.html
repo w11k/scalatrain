@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <link rel="stylesheet" type="text/css" href="css/scalatrain.css"/>
+    <title>ScalaTrain</title>
+  </head>
+
+  <body>
+    <div id="topArea">
+      <div>ScalaTrain</div>
+    </div>
+
+    <div id="centralArea">
+
+      <div id="messages">
+        <div class="lift:msgs">
+          <div>
+            <div>Error1</div>
+            <div>Error2</div>
+          </div>
+        </div>
+      </div>
+
+      <form class="lift:findConnections?form=post">
+        <div style="float: right;">
+          <img src="img/scalatrain.jpeg" height="140px">
+        </div>
+        <div>
+          <table>
+            <tr>
+              <td><label for="from">From</label></td>
+              <td><input id="from" type="text"></td>
+            </tr>
+            <tr>
+              <td><label for="to">To</label></td>
+              <td><input id="to" type="text"></td>
+            </tr>
+            <tr>
+              <td><label for="departureTime">Departure time</label></td>
+              <td><input id="departureTime" type="text"></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
+              <td><input id="findConnections" type="submit" value="Find Connections"></td>
+            </tr>
+          </table>
+        </div>
+
+        <div id="connections" style="clear: both;">
+          <div class="connection">
+            <div>
+              Departure from <span class="from">A</span> at <span class="departureTime">12:00</span>,
+              arrival at <span class="to">B</span> at <span class="arrivalTime">16:00</span>.
+            </div>
+            <div>
+              Using these Trains: <span class="trains">ICE1, ICE2</span>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div id="bottomArea">
+      <div>Copyright (c) 2011 WeigleWilczek</div>
+    </div>
+  </body>
+
+</html>

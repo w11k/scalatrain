@@ -92,3 +92,11 @@ class JourneyPlanner(trains: Set[Train]) extends Logging {
     hops groupBy { _.from }
   }
 }
+
+trait JourneyPlannerContext {
+
+  lazy val journeyPlanner: JourneyPlanner =
+    new JourneyPlanner(trains)
+
+  protected def trains: Set[Train]
+}

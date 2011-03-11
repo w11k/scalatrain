@@ -1,0 +1,74 @@
+body {
+  margin-left: auto;
+  margin-right: auto;
+  width: 800px;
+}
+
+div, td, input {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 12pt;
+}
+
+label {
+  margin-right: 1em;
+}
+
+ul {
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 0px;
+}
+
+li {
+  list-style: none;
+}
+
+#topArea {
+  background-color: #9b1d23;
+  color: white;
+  margin-top: 2em;
+  padding: 1em;
+  text-align: center;
+}
+
+#topArea div {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+#bottomArea {
+  border-top: solid 1px black;
+  padding: 1em;
+  text-align: center;
+}
+
+#centralArea {
+  margin: 2em 0em 2em 0em;
+}
+
+#messages > div > div {
+  background-color: #e4e4e4;
+  color: #9b1d23;
+  margin-bottom: 2em;
+  padding: 1em 0.5em 1em 0.5em;
+}
+
+#findConnections {
+  margin-top: 0.5em;
+  width: 100%;
+}
+
+#connections {
+  margin-top: 2em;
+}
+
+#connections > div:nth-child(odd) {
+  background-color: #e4e4e4;
+}
+
+.connection {
+  padding: 1em 0.5em 1em 0.5em;
+}
+
+.from, .to, .departureTime, .arrivalTime, .trains {
+  font-weight: bold;
+}
