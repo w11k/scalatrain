@@ -1,0 +1,5 @@
+h1. ScalaTrain
+
+This project accompanies the (German) tutorial-style Scala book "Durchstarten mit Scala":http://entwickler-press.de/ep/psecom,id,2,buchid,224,p,0,_language,de.html. In this book we are step by step developing a simple journey planner in order to show the most important Scala features in a hands-on way. If you want to follow the chapters' flow, just have look at the commit history.
+
+ScalaTips is open source software licensed under the "Apache 2.0 License":http://www.apache.org/licenses/LICENSE-2.0.html. If you are interested in the code, just use it!
